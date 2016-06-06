@@ -2,7 +2,7 @@
     3.3 Assignment: pick apart your user's input 
 '''
 
-input_password = input("Tell me your paswword please : ")
+input_password = input("Tell me your password please : ")
 
 first_letter = input_password[0:1].upper()
 
