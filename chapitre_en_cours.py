@@ -2,11 +2,11 @@
     Script Python générique pour exécuter les exemples du cours    
 '''
 
-def add_underscores(word):
-    new_word = '_'
-    for i in range(0, len(word)):
-        new_word = word[i] + "_"
-    return new_word
 
-phrase = "hello "
-print(add_underscores(phrase))
+try:
+    number = int(input("Enter an non-zero integer: "))
+    print("10 / {} = {}".format(number, 10.0/number))
+except ValueError:
+    print("You did not enter an integer.")
+except ZeroDivisionError:
+    print("You cannot enter 0.")
