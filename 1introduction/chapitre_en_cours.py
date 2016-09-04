@@ -2,11 +2,16 @@
     Script Python générique pour exécuter les exemples du cours    
 '''
 
+import csv
 import os
 
-my_path = "/Users/bertrand/Documents/Projets/realpython"
-input_file_name = os.path.join(my_path, 'poem.txt')
+my_path = "practice_files/"
 
-with open(input_file_name, 'r') as my_input_file:
-    for line in my_input_file.readlines():
-        print(line,)
+
+my_ratings = [ ["Movie", "Rating"],
+              ["Rebel Without a Cause", "3"],
+              ["Monty Python's Life of Brian", "5"],
+              ["Santa Claus Conquers the Martians", "0"] ]
+with open(os.path.join(my_path, "movies.csv"), "w") as my_file:
+    my_file_writer = csv.writer(my_file)
+    my_file_writer.writerows(my_ratings)
