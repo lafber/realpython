@@ -2,16 +2,20 @@
     Script Python générique pour exécuter les exemples du cours    
 '''
 
-import csv
 import os
+from PyPDF2 import PdfFileReader, PdfFileWriter
 
-my_path = "practice_files/"
+path = 'practice_files'
 
+input_file_name = os.path.join(path,'Pride and Prejudice.pdf')
+input_file = PdfFileReader(open(input_file_name,'rb'))
+output_PDF = PdfFileWriter()
 
-my_ratings = [ ["Movie", "Rating"],
-              ["Rebel Without a Cause", "3"],
-              ["Monty Python's Life of Brian", "5"],
-              ["Santa Claus Conquers the Martians", "0"] ]
-with open(os.path.join(my_path, "movies.csv"), "w") as my_file:
-    my_file_writer = csv.writer(my_file)
-    my_file_writer.writerows(my_ratings)
+for page_num in range(1,4):
+    output_PDF.addPage(input_file.getPage(page_num))
+    
+output_file_name = os.path.join(path, '../output/portion.pdf')
+output_file = open(output_file_name, "wb")
+output_PDF.write(output_file)
+output_file.close()
+
