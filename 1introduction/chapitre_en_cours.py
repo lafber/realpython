@@ -3,18 +3,25 @@
 '''
 
 import os
+import copy
 from PyPDF2 import PdfFileReader, PdfFileWriter
 
 path = 'practice_files'
 
-input_file_name = os.path.join(path,'Pride and Prejudice.pdf')
+input_file_name = os.path.join(path,'The Emperor.pdf')
 input_file = PdfFileReader(open(input_file_name,'rb'))
 output_PDF = PdfFileWriter()
 
-for page_num in range(1,4):
-    output_PDF.addPage(input_file.getPage(page_num))
-    
-output_file_name = os.path.join(path, '../output/portion.pdf')
+watermark_file_name = os.path.join(path, 'top secret.pdf')
+watermark_file_name = PdfFileReader(open(watermark_file_name, 'rb'))
+
+for page_num in range(0, input_file.getNumPages()):
+    page = input_file.getPage(page_num)
+    page.mergePage(watermark_file_name.getPage(0))
+    output_PDF.addPage(page)
+
+output_PDF.encrypt("gooo2Bking")
+output_file_name = os.path.join(path, '../output/New Suit.pdf')
 output_file = open(output_file_name, "wb")
 output_PDF.write(output_file)
 output_file.close()
