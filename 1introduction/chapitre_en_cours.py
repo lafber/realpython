@@ -2,27 +2,30 @@
     Script Python générique pour exécuter les exemples du cours    
 '''
 
-import os
-import copy
-from PyPDF2 import PdfFileReader, PdfFileWriter
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch 
+from reportlab.lib import colors
+from reportlab.platypus import Table
 
-path = 'practice_files'
+xmargin = 3.2 * inch
+ymargin = 6 * inch
 
-input_file_name = os.path.join(path,'The Emperor.pdf')
-input_file = PdfFileReader(open(input_file_name,'rb'))
-output_PDF = PdfFileWriter()
+c = canvas.Canvas('tps_report.pdf', pagesize=letter)
+c.setFont('Helvetica', 12)
 
-watermark_file_name = os.path.join(path, 'top secret.pdf')
-watermark_file_name = PdfFileReader(open(watermark_file_name, 'rb'))
+data = [['#1', '#2', '#3', '#4', '#5'],
+        ['10', '11', '12', '13', '14'],
+        ['20', '21', '22', '23', '24'],
+        ['30', '31', '32', '33', '34'],
+        ['20', '21', '22', '23', '24'],
+        ['20', '21', '22', '23', '24'],
+        ['20', '21', '22', '23', '24'],
+        ['20', '21', '22', '23', '24']]
 
-for page_num in range(0, input_file.getNumPages()):
-    page = input_file.getPage(page_num)
-    page.mergePage(watermark_file_name.getPage(0))
-    output_PDF.addPage(page)
+t = Table(data)
+t.setStyle([('TEXTCOLOR', (0,0), (4,0), colors.red)])
+t.wrapOn(c, xmargin, ymargin)
+t.drawOn(c, xmargin, ymargin)
 
-output_PDF.encrypt("gooo2Bking")
-output_file_name = os.path.join(path, '../output/New Suit.pdf')
-output_file = open(output_file_name, "wb")
-output_PDF.write(output_file)
-output_file.close()
-
+c.save()
