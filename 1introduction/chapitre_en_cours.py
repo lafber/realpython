@@ -2,30 +2,31 @@
     Script Python générique pour exécuter les exemples du cours    
 '''
 
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.units import inch 
-from reportlab.lib import colors
-from reportlab.platypus import Table
+import sqlite3
 
-xmargin = 3.2 * inch
-ymargin = 6 * inch
+    
+people_values = (
+        ('Ron', 'Obvious', 42),
+        ('Luigi', 'Vercotti', 43),
+        ('Arthur', 'Belling', 28)
+)                
+    
 
-c = canvas.Canvas('tps_report.pdf', pagesize=letter)
-c.setFont('Helvetica', 12)
 
-data = [['#1', '#2', '#3', '#4', '#5'],
-        ['10', '11', '12', '13', '14'],
-        ['20', '21', '22', '23', '24'],
-        ['30', '31', '32', '33', '34'],
-        ['20', '21', '22', '23', '24'],
-        ['20', '21', '22', '23', '24'],
-        ['20', '21', '22', '23', '24'],
-        ['20', '21', '22', '23', '24']]
+with sqlite3.connect(':memory:') as connection:
+    c = connection.cursor()
+    c.executescript("""
+        DROP TABLE IF EXISTS people;
+        CREATE TABLE people(firstname TEXT, lastname TEXT, age INT);
+                    """)
 
-t = Table(data)
-t.setStyle([('TEXTCOLOR', (0,0), (4,0), colors.red)])
-t.wrapOn(c, xmargin, ymargin)
-t.drawOn(c, xmargin, ymargin)
+    c.executemany("INSERT INTO people VALUES(?,?,?)", people_values)
+    
+    
+    c.execute("SELECT FirstName, LastName FROM People WHERE age > 30")
 
-c.save()
+    while True:
+        row = c.fetchone()
+        if row is None:
+            break
+        print(row)
