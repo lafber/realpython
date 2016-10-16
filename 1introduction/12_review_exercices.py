@@ -32,9 +32,6 @@ c.executemany("INSERT INTO roster VALUES(?,?,?)", roster_values)
 
 c.execute('UPDATE roster SET species=? WHERE name=?', ('Human', 'Korben Dallas'))
 
-c.execute("SELECT name, iq FROM roster WHERE species='Human' ")
+c.execute("SELECT name, iq WHERE species=Human")
 for row in c.fetchall():
     print(row)
-    
-    
-    

@@ -2,31 +2,17 @@
     Script Python générique pour exécuter les exemples du cours    
 '''
 
-import sqlite3
+import re
+from urllib.request import urlopen
 
-    
-people_values = (
-        ('Ron', 'Obvious', 42),
-        ('Luigi', 'Vercotti', 43),
-        ('Arthur', 'Belling', 28)
-)                
-    
+my_address = "https://realpython.com/practice/dionysus.html"
+html_page = urlopen(my_address)
 
+html_text = html_page.read().decode('utf-8')
 
-with sqlite3.connect(':memory:') as connection:
-    c = connection.cursor()
-    c.executescript("""
-        DROP TABLE IF EXISTS people;
-        CREATE TABLE people(firstname TEXT, lastname TEXT, age INT);
-                    """)
+match_results = re.search("<title.*?>.*</title.*?>", html_text, re.IGNORECASE)
 
-    c.executemany("INSERT INTO people VALUES(?,?,?)", people_values)
-    
-    
-    c.execute("SELECT FirstName, LastName FROM People WHERE age > 30")
+title = match_results.group()
+title = re.sub("<.*?>", "", title)
 
-    while True:
-        row = c.fetchone()
-        if row is None:
-            break
-        print(row)
+print(title)
