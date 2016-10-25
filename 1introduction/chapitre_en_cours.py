@@ -2,14 +2,22 @@
     Script Python générique pour exécuter les exemples du cours    
 '''
 
-from bs4 import BeautifulSoup
-from urllib.request import urlopen
+import mechanicalsoup
 
-my_address = "https://realpython.com/practice/dionysus.html"
+my_browser = mechanicalsoup.Browser( )
+login_page = my_browser.get("https://realpython.com/practice/login.php")
+login_html = login_page.soup
 
-html_page = urlopen(my_address)
-html_text = html_page.read() #Py 3:decode 
+# select the form and fill in its fields
+form = login_html.select("form")[0]
+form.select('input')[0]['value'] = 'zeus'
+form.select('input')[1]['value'] = 'ThunderDude'
 
-my_soup = BeautifulSoup(html_text,"html5lib")
+profiles_page = my_browser.submit(form, login_page.url) #submit form
 
-print(my_soup.find_all('img', src='dionysus.jpg'))
+print(profiles_page.url)
+print(profiles_page.soup)
+
+for link in profiles_page.soup.select('a'):
+    print('Address:', link['href'])
+    print('Text:', link.text)
