@@ -3,21 +3,23 @@
 '''
 
 import mechanicalsoup
+from time import sleep
 
 my_browser = mechanicalsoup.Browser( )
-login_page = my_browser.get("https://realpython.com/practice/login.php")
-login_html = login_page.soup
 
-# select the form and fill in its fields
-form = login_html.select("form")[0]
-form.select('input')[0]['value'] = 'zeus'
-form.select('input')[1]['value'] = 'ThunderDude'
+# Obtain 1 stock quote per minute for the next 3 minutes
 
-profiles_page = my_browser.submit(form, login_page.url) #submit form
 
-print(profiles_page.url)
-print(profiles_page.soup)
-
-for link in profiles_page.soup.select('a'):
-    print('Address:', link['href'])
-    print('Text:', link.text)
+for i in range(0,3):
+    
+    page = my_browser.get("https://fr.finance.yahoo.com/q?s=^fchi")
+    html_text = page.soup
+    
+    # return a list of all tags where 
+    my_tags = html_text.select("#yfs_l10_^fchi")
+    
+    my_price = my_tags[0].text
+    
+    print("The current price of CAC40 is: {}".format(my_price))
+    if i< 2:
+        sleep(60)
